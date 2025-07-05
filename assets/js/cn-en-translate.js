@@ -18,7 +18,10 @@ $(document).ready(function () {
                 [
                     "qualification1__title", "qualification1__subtitle", "qualification1__date",
                     "qualification2__title", "qualification2__subtitle", "qualification2__date",
-                    "qualification3__title", "qualification3__subtitle", "qualification3__date"
+                    "qualification3__title", "qualification3__subtitle", "qualification3__date",
+                    "cert1__title", "cert1__subtitle", "cert1__date",
+                    "cert2__title", "cert2__subtitle", "cert2__date",
+                    "cert3__title", "cert3__subtitle", "cert3__date"
                 ].forEach(function (key) {
                     $("[i18n='" + key + "']").text(data[key]);
                 });
@@ -48,7 +51,10 @@ $(document).ready(function () {
                     [
                         "qualification1__title", "qualification1__subtitle", "qualification1__date",
                         "qualification2__title", "qualification2__subtitle", "qualification2__date",
-                        "qualification3__title", "qualification3__subtitle", "qualification3__date"
+                        "qualification3__title", "qualification3__subtitle", "qualification3__date",
+                        "cert1__title", "cert1__subtitle", "cert1__date",
+                        "cert2__title", "cert2__subtitle", "cert2__date",
+                        "cert3__title", "cert3__subtitle", "cert3__date"
                     ].forEach(function (key) {
                         $("[i18n='" + key + "']").text(data[key]);
                     });
