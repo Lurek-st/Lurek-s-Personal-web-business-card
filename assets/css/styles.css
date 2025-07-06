@@ -649,6 +649,22 @@ img {
   width: 70%;
 }
 
+.skills__finance {
+  width: 85%;
+}
+
+.skills__market {
+  width: 80%;
+}
+
+.skills__strategy {
+  width: 75%;
+}
+
+.skills__decision {
+  width: 80%;
+}
+
 /*==================== QUALIFICATION ====================*/
 .qualification__tabs {
   display: flex;
