@@ -212,11 +212,17 @@ const selectedIcon = localStorage.getItem('selected-icon')
 const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light'
 const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'uil-moon' : 'uil-sun'
 
-// We validate if the user previously chose a topic
+// Set default to dark theme if no previous selection
 if (selectedTheme) {
   // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated the dark
   document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
   themeButton.classList[selectedIcon === 'uil-moon' ? 'add' : 'remove'](iconTheme)
+} else {
+  // Default to dark theme
+  document.body.classList.add(darkTheme)
+  themeButton.classList.add(iconTheme)
+  localStorage.setItem('selected-theme', 'dark')
+  localStorage.setItem('selected-icon', 'uil-sun')
 }
 
 // Activate / deactivate the theme manually with the button
@@ -306,7 +312,7 @@ const typingTexts = [
   },
   {
     element: document.querySelector('.home__description'),
-    text: 'High level experience in web design and development knowledge, producing quality work.',
+    text: 'AI Tools Expert, Web3 Development Digital Nomad, CityU Innovation & Entrepreneurship Leader',
     textCn: 'AI工具专家，Web3开发数字游民，港城大创新创业者',
     delay: 0,
     speed: 50

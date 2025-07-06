@@ -988,20 +988,8 @@ img {
   background: linear-gradient(135deg, var(--container-color) 0%, rgba(var(--first-color-rgb), 0.02) 100%);
 }
 
-.qualification__data.active:hover {
-  transform: translateX(0) translateY(-8px);
-}
-
-.qualification__data.slide-in-left:hover {
-  transform: translateX(-80px) translateY(-8px);
-}
-
-.qualification__data.slide-in-right:hover {
-  transform: translateX(80px) translateY(-8px);
-}
-
-.qualification__data:not(.active):hover {
-  transform: translateX(-50px) translateY(-8px);
+.qualification__data:hover {
+  transform: translateY(-8px);
 }
 
 .qualification__data>div {
