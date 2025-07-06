@@ -15,6 +15,7 @@
   --first-color-second: hsl(var(--hue-color), 69%, 61%);
   --first-color-alt: hsl(var(--hue-color), 57%, 53%);
   --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
+  --first-color-rgb: 230, 119, 23;
   --title-color: hsl(var(--hue-color), 8%, 15%);
   --text-color: hsl(var(--hue-color), 8%, 45%);
   --text-color-light: hsl(var(--hue-color), 8%, 65%);
@@ -77,6 +78,7 @@
 body.dark-theme {
   /* HSL color mode */
   --first-color-second: hsl(var(--hue-color), 30%, 8%);
+  --first-color-rgb: 230, 119, 23;
   --title-color: hsl(var(--hue-color), 8%, 95%);
   --text-color: hsl(var(--hue-color), 8%, 45%);
   --text-color-light: hsl(var(--hue-color), 8%, 75%);
@@ -966,6 +968,325 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--text-color-light);
+}
+
+/*========== WEB3 ANIMATIONS ==========*/
+
+/* Scroll Animation Base */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Title Floating Animation */
+.section__title {
+  opacity: 0;
+  transform: translateY(50px) scale(0.8);
+  transition: all 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.section__title.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.section__subtitle {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.0s cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+}
+
+.section__subtitle.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Typing Effect */
+.typing-text {
+  border-right: 2px solid var(--first-color);
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    border-color: var(--first-color);
+  }
+
+  51%,
+  100% {
+    border-color: transparent;
+  }
+}
+
+.home__title {
+  opacity: 0;
+}
+
+.home__subtitle {
+  opacity: 0;
+}
+
+.home__description {
+  opacity: 0;
+}
+
+/* Hover Effects for Interactive Elements */
+
+/* Skills Content Hover */
+.skills__content {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.skills__content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--first-color-rgb), 0.1), transparent);
+  transition: left 0.6s ease;
+  z-index: 1;
+}
+
+.skills__content:hover::before {
+  left: 100%;
+}
+
+.skills__content:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--container-color) 0%, rgba(var(--first-color-rgb), 0.02) 100%);
+}
+
+.skills__header {
+  position: relative;
+  z-index: 2;
+}
+
+/* Qualification Button Hover */
+.qualification__button {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.qualification__button::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--first-color);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.qualification__button:hover::before {
+  width: 100%;
+}
+
+.qualification__button:hover {
+  transform: translateY(-2px);
+}
+
+/* Portfolio Content Hover */
+.portfolio__content {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.portfolio__content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(var(--first-color-rgb), 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.portfolio__content:hover::after {
+  opacity: 1;
+}
+
+.portfolio__content:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.portfolio__img {
+  transition: transform 0.4s ease;
+}
+
+.portfolio__content:hover .portfolio__img {
+  transform: scale(1.1);
+}
+
+.portfolio_ {
+  position: relative;
+  z-index: 2;
+}
+
+/* Contact Information Hover */
+.contact__information {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.contact__information:hover {
+  transform: translateX(10px);
+  background: rgba(var(--first-color-rgb), 0.05);
+}
+
+/* Button Glow Effect */
+.button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease;
+}
+
+.button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(var(--first-color-rgb), 0.3);
+}
+
+/* About Image Hover */
+.about__img {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about__img:hover {
+  transform: scale(1.05) rotate(2deg);
+  filter: brightness(1.1);
+}
+
+/* Social Icons Hover */
+.home__social-icon,
+.footer__social {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.home__social-icon:hover {
+  transform: translateY(-5px) scale(1.2);
+  color: var(--first-color);
+}
+
+.footer__social:hover {
+  transform: translateY(-3px) scale(1.1);
+}
+
+/* Floating Animation for Home Elements */
+.home__img {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Pulse Animation for Skills Progress */
+.skills__percentage {
+  position: relative;
+  overflow: hidden;
+}
+
+.skills__percentage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Stagger Animation for Skills List */
+.skills__data {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.skills__open .skills__data {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.skills__open .skills__data:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.skills__open .skills__data:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.skills__open .skills__data:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.skills__open .skills__data:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+.skills__open .skills__data:nth-child(5) {
+  transition-delay: 0.5s;
 }
 
 

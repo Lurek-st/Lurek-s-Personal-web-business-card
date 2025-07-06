@@ -150,3 +150,133 @@ themeButton.addEventListener('click', () => {
   localStorage.setItem('selected-theme', getCurrentTheme())
   localStorage.setItem('selected-icon', getCurrentIcon())
 })
+
+/*==================== WEB3 ANIMATIONS ====================*/
+
+// Scroll Animation Observer
+const scrollElements = document.querySelectorAll('.section__title, .section__subtitle, .skills__content, .qualification__data, .portfolio__content, .contact__information, .about__img')
+
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top
+  return (
+    elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+  )
+}
+
+const elementOutofView = (el) => {
+  const elementTop = el.getBoundingClientRect().top
+  return (
+    elementTop > (window.innerHeight || document.documentElement.clientHeight)
+  )
+}
+
+const displayScrollElement = (element) => {
+  element.classList.add('active')
+}
+
+const hideScrollElement = (element) => {
+  element.classList.remove('active')
+}
+
+const handleScrollAnimation = () => {
+  scrollElements.forEach((el) => {
+    if (elementInView(el, 1.25)) {
+      displayScrollElement(el)
+    } else if (elementOutofView(el)) {
+      hideScrollElement(el)
+    }
+  })
+}
+
+window.addEventListener('scroll', () => {
+  handleScrollAnimation()
+})
+
+// Typing Effect
+const typingTexts = [
+  {
+    element: document.querySelector('.home__title'),
+    text: 'Hi, I\'m Lurek',
+    textCn: '你好，我是 Lurek',
+    delay: 500
+  },
+  {
+    element: document.querySelector('.home__subtitle'),
+    text: 'CityU-DG UG Student',
+    textCn: 'CityU-DG UG Student',
+    delay: 2000
+  },
+  {
+    element: document.querySelector('.home__description'),
+    text: 'High level experience in web design and development knowledge, producing quality work.',
+    textCn: '拥有丰富的网页设计和开发知识经验，能够产出高质量的作品。',
+    delay: 4000
+  }
+]
+
+function typeWriter(element, text, speed = 50) {
+  return new Promise((resolve) => {
+    if (!element) {
+      resolve()
+      return
+    }
+
+    element.style.opacity = '1'
+    element.innerHTML = ''
+    element.classList.add('typing-text')
+
+    let i = 0
+    function type() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i)
+        i++
+        setTimeout(type, speed)
+      } else {
+        element.classList.remove('typing-text')
+        resolve()
+      }
+    }
+    type()
+  })
+}
+
+function getCurrentLanguage() {
+  return localStorage.getItem('lang') || 'en'
+}
+
+async function startTypingAnimation() {
+  const currentLang = getCurrentLanguage()
+
+  for (const item of typingTexts) {
+    await new Promise(resolve => setTimeout(resolve, item.delay))
+
+    const textToType = currentLang === 'cn' ? item.textCn : item.text
+    await typeWriter(item.element, textToType, 80)
+  }
+}
+
+// Start typing animation when page loads
+window.addEventListener('load', () => {
+  setTimeout(startTypingAnimation, 1000)
+})
+
+// Restart typing animation when language changes
+document.getElementById('translate').addEventListener('click', () => {
+  setTimeout(() => {
+    // Reset all text elements
+    typingTexts.forEach(item => {
+      if (item.element) {
+        item.element.style.opacity = '0'
+        item.element.innerHTML = ''
+      }
+    })
+
+    // Restart typing animation
+    setTimeout(startTypingAnimation, 500)
+  }, 100)
+})
+
+// Initial scroll animation check
+document.addEventListener('DOMContentLoaded', () => {
+  handleScrollAnimation()
+})
