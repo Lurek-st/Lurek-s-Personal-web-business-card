@@ -832,6 +832,7 @@ img {
   display: grid;
   grid-template-columns: 1fr max-content 1fr;
   column-gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .qualification__title {
@@ -865,16 +866,98 @@ img {
   width: 1px;
   height: 100%;
   background-color: var(--first-color);
-  transform: translate(6px, -7px)
 }
 
 .qualification__content[data-content] {
   display: none;
-
 }
 
 .qualification__active[data-content] {
   display: block;
+}
+
+/* Qualification Animation Styles */
+.qualification__data {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.qualification__data.slide-in-left {
+  transform: translateX(-80px);
+}
+
+.qualification__data.slide-in-right {
+  transform: translateX(80px);
+}
+
+.qualification__data.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.qualification__data.active .qualification__title,
+.qualification__data.active .qualification__subtitle,
+.qualification__data.active .qualification__calendar {
+  animation: fadeInUp 0.6s ease-out forwards;
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.qualification__data.active .qualification__subtitle {
+  animation-delay: 0.35s;
+}
+
+.qualification__data.active .qualification__calendar {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.qualification__rounder {
+  opacity: 0;
+  transform: scale(0.3);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.qualification__rounder.active {
+  opacity: 1;
+  transform: scale(1);
+  animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--first-color-rgb), 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--first-color-rgb), 0);
+  }
+}
+
+.qualification__line {
+  opacity: 0;
+  transform: translate(6px, -7px) scaleY(0);
+  transform-origin: top;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.qualification__line.active {
+  opacity: 1;
+  transform: translate(6px, -7px) scaleY(1);
 }
 
 .qualification__button.qualification__active {

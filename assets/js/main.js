@@ -52,21 +52,99 @@ skillsContentElements.forEach((el) => {
 const tabs = document.querySelectorAll('[data-target]'),
   tabContents = document.querySelectorAll('[data-content]')
 
+// Animation function for qualification content
+function animateQualificationContent(targetContent) {
+  const qualificationData = targetContent.querySelectorAll('.qualification__data')
+  const rounders = targetContent.querySelectorAll('.qualification__rounder')
+  const lines = targetContent.querySelectorAll('.qualification__line')
+
+  // Reset all elements
+  qualificationData.forEach((data, index) => {
+    data.classList.remove('active', 'slide-in-left', 'slide-in-right')
+
+    // Determine if content is on left or right based on grid structure
+    const leftContent = data.children[0]
+    const rightContent = data.children[2]
+
+    if (leftContent && leftContent.innerHTML.trim() !== '') {
+      data.classList.add('slide-in-left')
+    } else if (rightContent && rightContent.innerHTML.trim() !== '') {
+      data.classList.add('slide-in-right')
+    }
+  })
+
+  rounders.forEach(rounder => {
+    rounder.classList.remove('active')
+  })
+
+  lines.forEach(line => {
+    line.classList.remove('active')
+  })
+
+  // Animate in sequence with staggered timing
+  setTimeout(() => {
+    qualificationData.forEach((data, index) => {
+      setTimeout(() => {
+        data.classList.add('active')
+      }, index * 200) // 200ms delay between each card
+    })
+
+    rounders.forEach((rounder, index) => {
+      setTimeout(() => {
+        rounder.classList.add('active')
+      }, index * 150 + 100) // Slightly earlier than cards
+    })
+
+    lines.forEach((line, index) => {
+      setTimeout(() => {
+        line.classList.add('active')
+      }, index * 150 + 300) // After rounders start appearing
+    })
+  }, 100)
+}
+
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
-    console.log('click disparado')
     const target = document.querySelector(tab.dataset.target)
 
-    tabContents.forEach(tabContent => {
-      tabContent.classList.remove('qualification__active')
-    })
-    target.classList.add('qualification__active')
+    // Hide current content with fade out
+    const currentActive = document.querySelector('.qualification__active[data-content]')
+    if (currentActive && currentActive !== target) {
+      const currentData = currentActive.querySelectorAll('.qualification__data')
+      const currentRounders = currentActive.querySelectorAll('.qualification__rounder')
+      const currentLines = currentActive.querySelectorAll('.qualification__line')
+
+      currentData.forEach(data => data.classList.remove('active'))
+      currentRounders.forEach(rounder => rounder.classList.remove('active'))
+      currentLines.forEach(line => line.classList.remove('active'))
+    }
+
+    // Switch active content after a brief delay
+    setTimeout(() => {
+      tabContents.forEach(tabContent => {
+        tabContent.classList.remove('qualification__active')
+      })
+      target.classList.add('qualification__active')
+
+      // Start animation for new content
+      animateQualificationContent(target)
+    }, currentActive && currentActive !== target ? 300 : 0)
 
     tabs.forEach(tab => {
       tab.classList.remove('qualification__active')
     })
     tab.classList.add('qualification__active')
   })
+})
+
+// Initialize first tab animation on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const firstActiveContent = document.querySelector('.qualification__active[data-content]')
+    if (firstActiveContent) {
+      animateQualificationContent(firstActiveContent)
+    }
+  }, 500)
 })
 
 
