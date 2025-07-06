@@ -154,42 +154,43 @@ themeButton.addEventListener('click', () => {
 /*==================== WEB3 ANIMATIONS ====================*/
 
 // Scroll Animation Observer
-const scrollElements = document.querySelectorAll('.section__title, .section__subtitle, .skills__content, .qualification__data, .portfolio__content, .contact__information, .about__img')
+const scrollElements = document.querySelectorAll('.section__title, .section__subtitle, .scroll-animate, .skills__content, .qualification__data, .portfolio__content, .contact__information, .about__img')
 
 const elementInView = (el, dividend = 1) => {
   const elementTop = el.getBoundingClientRect().top
-  return (
-    elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
-  )
-}
-
-const elementOutofView = (el) => {
-  const elementTop = el.getBoundingClientRect().top
-  return (
-    elementTop > (window.innerHeight || document.documentElement.clientHeight)
-  )
+  const elementVisible = elementTop <= ((window.innerHeight || document.documentElement.clientHeight) / dividend)
+  return elementVisible
 }
 
 const displayScrollElement = (element) => {
   element.classList.add('active')
 }
 
-const hideScrollElement = (element) => {
-  element.classList.remove('active')
-}
-
 const handleScrollAnimation = () => {
   scrollElements.forEach((el) => {
-    if (elementInView(el, 1.25)) {
+    if (elementInView(el, 1.1)) {  // 更容易触发
       displayScrollElement(el)
-    } else if (elementOutofView(el)) {
-      hideScrollElement(el)
     }
   })
 }
 
+// Debug function to manually show elements (remove after testing)
+const forceShowAllElements = () => {
+  scrollElements.forEach((el) => {
+    displayScrollElement(el)
+  })
+}
+
+// Throttle scroll events for better performance
+let ticking = false
 window.addEventListener('scroll', () => {
-  handleScrollAnimation()
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      handleScrollAnimation()
+      ticking = false
+    })
+    ticking = true
+  }
 })
 
 // Typing Effect
@@ -204,13 +205,13 @@ const typingTexts = [
     element: document.querySelector('.home__subtitle'),
     text: 'CityU-DG UG Student',
     textCn: 'CityU-DG UG Student',
-    delay: 2000
+    delay: 0
   },
   {
     element: document.querySelector('.home__description'),
     text: 'High level experience in web design and development knowledge, producing quality work.',
     textCn: '拥有丰富的网页设计和开发知识经验，能够产出高质量的作品。',
-    delay: 4000
+    delay: 0
   }
 ]
 
@@ -247,17 +248,23 @@ function getCurrentLanguage() {
 async function startTypingAnimation() {
   const currentLang = getCurrentLanguage()
 
-  for (const item of typingTexts) {
-    await new Promise(resolve => setTimeout(resolve, item.delay))
+  // First delay for initial start
+  await new Promise(resolve => setTimeout(resolve, 500))
 
+  for (const item of typingTexts) {
     const textToType = currentLang === 'cn' ? item.textCn : item.text
     await typeWriter(item.element, textToType, 80)
+    // Small delay between each text for better visual flow
+    await new Promise(resolve => setTimeout(resolve, 200))
   }
 }
 
 // Start typing animation when page loads
 window.addEventListener('load', () => {
   setTimeout(startTypingAnimation, 1000)
+  // Also check scroll animations on load
+  setTimeout(handleScrollAnimation, 100)
+  setTimeout(handleScrollAnimation, 500)
 })
 
 // Restart typing animation when language changes
@@ -278,5 +285,14 @@ document.getElementById('translate').addEventListener('click', () => {
 
 // Initial scroll animation check
 document.addEventListener('DOMContentLoaded', () => {
+  // Check animations multiple times to ensure they work
   handleScrollAnimation()
+  setTimeout(handleScrollAnimation, 300)
+  setTimeout(handleScrollAnimation, 600)
+  setTimeout(handleScrollAnimation, 1000)
+})
+
+// Add resize listener to recheck animations
+window.addEventListener('resize', () => {
+  setTimeout(handleScrollAnimation, 100)
 })
