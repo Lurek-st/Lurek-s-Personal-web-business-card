@@ -335,8 +335,8 @@ window.addEventListener('load', () => {
   setTimeout(handleScrollAnimation, 500)
 })
 
-// Restart typing animation when language changes
-document.getElementById('translate').addEventListener('click', () => {
+// Function to handle language change
+function handleLanguageChange() {
   // Immediately stop all animations
   stopAllAnimations()
 
@@ -372,7 +372,20 @@ document.getElementById('translate').addEventListener('click', () => {
       }
     }, 600)
   }, 100)
-})
+}
+
+// Restart typing animation when language changes (menu translate button)
+document.getElementById('translate').addEventListener('click', handleLanguageChange)
+
+// Add event listener for mobile translate button
+const mobileTranslateBtn = document.getElementById('mobile-translate')
+if (mobileTranslateBtn) {
+  mobileTranslateBtn.addEventListener('click', () => {
+    // Trigger the menu translate button click
+    document.getElementById('translate').click()
+    handleLanguageChange()
+  })
+}
 
 // Initial scroll animation check
 document.addEventListener('DOMContentLoaded', () => {
