@@ -287,9 +287,16 @@ function stopAllAnimations() {
   activeAnimations.forEach(id => clearTimeout(id))
   activeAnimations = []
 
-  // Remove typing classes from all elements
+  // Remove typing classes from all elements and reset their state
   document.querySelectorAll('.typing-text').forEach(el => {
     el.classList.remove('typing-text')
+  })
+
+  // Also reset typing texts elements specifically
+  typingTexts.forEach(item => {
+    if (item.element) {
+      item.element.classList.remove('typing-text')
+    }
   })
 }
 
@@ -335,12 +342,20 @@ window.addEventListener('load', () => {
   setTimeout(handleScrollAnimation, 500)
 })
 
+// Debounce variable to prevent multiple rapid calls
+let languageChangeTimeout = null
+
 // Function to handle language change
 function handleLanguageChange() {
+  // Clear any existing timeout to prevent multiple rapid calls
+  if (languageChangeTimeout) {
+    clearTimeout(languageChangeTimeout)
+  }
+
   // Immediately stop all animations
   stopAllAnimations()
 
-  setTimeout(() => {
+  languageChangeTimeout = setTimeout(() => {
     // Reset all text elements
     typingTexts.forEach(item => {
       if (item.element) {
@@ -356,8 +371,8 @@ function handleLanguageChange() {
       card.classList.remove('active')
     })
 
-    // Restart typing animation
-    setTimeout(startTypingAnimation, 500)
+    // Restart typing animation with increased delay
+    setTimeout(startTypingAnimation, 800)
 
     // Re-trigger about card animations if section is visible
     setTimeout(() => {
@@ -370,8 +385,11 @@ function handleLanguageChange() {
           }, index * 200)
         })
       }
-    }, 600)
-  }, 100)
+    }, 1000)
+
+    // Clear the timeout variable
+    languageChangeTimeout = null
+  }, 150)
 }
 
 // Restart typing animation when language changes (menu translate button)
@@ -381,9 +399,9 @@ document.getElementById('translate').addEventListener('click', handleLanguageCha
 const mobileTranslateBtn = document.getElementById('mobile-translate')
 if (mobileTranslateBtn) {
   mobileTranslateBtn.addEventListener('click', () => {
-    // Trigger the menu translate button click
+    // Only trigger the menu translate button click
+    // The handleLanguageChange will be called automatically by the translate button's event listener
     document.getElementById('translate').click()
-    handleLanguageChange()
   })
 }
 
