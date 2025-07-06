@@ -31,20 +31,20 @@ navLink.forEach(n => n.addEventListener('click', linkAction))
 
 /*==================== ACCORDION SKILLS ====================*/
 const skillsContent = document.getElementsByClassName('skills__content'),
-  skillsHeader = document.querySelectorAll('.skills__header')
+  skillsContentElements = document.querySelectorAll('.skills__content')
 
 function toggleSkills() {
-  let itemClass = this.parentNode.className
+  let itemClass = this.className
 
   for (i = 0; i < skillsContent.length; i++) {
     skillsContent[i].className = 'skills__content skills__close'
   }
   if (itemClass === 'skills__content skills__close') {
-    this.parentNode.className = 'skills__content skills__open'
+    this.className = 'skills__content skills__open'
   }
 }
 
-skillsHeader.forEach((el) => {
+skillsContentElements.forEach((el) => {
   el.addEventListener('click', toggleSkills)
 })
 
@@ -153,8 +153,12 @@ themeButton.addEventListener('click', () => {
 
 /*==================== WEB3 ANIMATIONS ====================*/
 
+// Global variables to track animations
+let activeAnimations = []
+let isTypingActive = false
+
 // Scroll Animation Observer
-const scrollElements = document.querySelectorAll('.section__title, .section__subtitle, .scroll-animate, .skills__content, .qualification__data, .portfolio__content, .contact__information, .about__img')
+const scrollElements = document.querySelectorAll('.section__title, .section__subtitle, .scroll-animate, .skills__content, .qualification__data, .portfolio__content, .contact__information, .about__img, .about__card')
 
 const elementInView = (el, dividend = 1) => {
   const elementTop = el.getBoundingClientRect().top
@@ -170,17 +174,21 @@ const handleScrollAnimation = () => {
   scrollElements.forEach((el) => {
     if (elementInView(el, 1.1)) {  // 更容易触发
       displayScrollElement(el)
-
-      // Check if this is the about section and start typing animation
-      if (el.classList.contains('about') && el.classList.contains('section')) {
-        // Only start once by checking if content is empty
-        const aboutDesc = document.querySelector('.about__description')
-        if (aboutDesc && aboutDesc.innerHTML.trim() === '') {
-          setTimeout(startAboutTypingAnimation, 800)
-        }
-      }
     }
   })
+
+  // Check if about section is in view and trigger card animations
+  const aboutSection = document.querySelector('.about.section')
+  if (aboutSection && elementInView(aboutSection, 1.2)) {
+    const aboutCards = document.querySelectorAll('.about__card')
+    aboutCards.forEach((card, index) => {
+      if (!card.classList.contains('active')) {
+        setTimeout(() => {
+          card.classList.add('active')
+        }, index * 200) // 依次显示，每张卡片间隔200ms
+      }
+    })
+  }
 }
 
 // Debug function to manually show elements (remove after testing)
@@ -227,27 +235,10 @@ const typingTexts = [
   }
 ]
 
-// About section typing texts  
-const aboutTypingTexts = [
-  {
-    text: 'As a Digital Nomad, I specialize in providing remote support to North American B2B clients using AI tools.',
-    textCn: '作为一名数字游民，我专注于使用AI工具为北美B端客户提供各类远程支持。',
-    speed: 50
-  },
-  {
-    text: 'I am also a Web2&3 Developer with extensive experience in web design and development.',
-    textCn: '同时，我也是一名Web2&3开发者，拥有丰富的网页设计和开发经验。',
-    speed: 50
-  },
-  {
-    text: 'As an Innovation Community Leader, I am dedicated to fostering an innovative and entrepreneurial atmosphere on campus.',
-    textCn: '作为创新创业社群领袖，致力于构建校内创新创业氛围。',
-    speed: 50
-  }
-]
+
 
 function typeWriter(element, text, speed = 50) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     if (!element) {
       resolve()
       return
@@ -258,16 +249,28 @@ function typeWriter(element, text, speed = 50) {
     element.classList.add('typing-text')
 
     let i = 0
+    let animationId
+
     function type() {
+      // Check if animation should be stopped
+      if (!isTypingActive) {
+        element.classList.remove('typing-text')
+        reject('Animation stopped')
+        return
+      }
+
       if (i < text.length) {
         element.innerHTML += text.charAt(i)
         i++
-        setTimeout(type, speed)
+        animationId = setTimeout(type, speed)
+        // Track this animation
+        activeAnimations.push(animationId)
       } else {
         element.classList.remove('typing-text')
         resolve()
       }
     }
+
     type()
   })
 }
@@ -276,54 +279,56 @@ function getCurrentLanguage() {
   return localStorage.getItem('lang') || 'en'
 }
 
+function stopAllAnimations() {
+  // Stop typing flag
+  isTypingActive = false
+
+  // Clear all active timeouts
+  activeAnimations.forEach(id => clearTimeout(id))
+  activeAnimations = []
+
+  // Remove typing classes from all elements
+  document.querySelectorAll('.typing-text').forEach(el => {
+    el.classList.remove('typing-text')
+  })
+}
+
 async function startTypingAnimation() {
+  // Stop all existing animations first
+  stopAllAnimations()
+
+  // Enable typing
+  isTypingActive = true
+
   const currentLang = getCurrentLanguage()
 
   // First delay for initial start
   await new Promise(resolve => setTimeout(resolve, 500))
 
-  for (const item of typingTexts) {
-    const textToType = currentLang === 'cn' ? item.textCn : item.text
-    await typeWriter(item.element, textToType, item.speed)
-    // Small delay between each text for better visual flow
-    await new Promise(resolve => setTimeout(resolve, 200))
-  }
-}
+  try {
+    for (const item of typingTexts) {
+      if (!isTypingActive) break // Check if we should stop
 
-async function startAboutTypingAnimation() {
-  const currentLang = getCurrentLanguage()
-  const aboutElement = document.querySelector('.about__description')
-
-  if (!aboutElement) return
-
-  // Clear existing content and prepare for typing
-  aboutElement.style.opacity = '1'
-  aboutElement.classList.add('active')
-  aboutElement.innerHTML = ''
-
-  for (let i = 0; i < aboutTypingTexts.length; i++) {
-    const item = aboutTypingTexts[i]
-    const textToType = currentLang === 'cn' ? item.textCn : item.text
-
-    // Create a span for each sentence with highlight styling
-    const span = document.createElement('span')
-    span.className = 'highlight'
-    aboutElement.appendChild(span)
-
-    await typeWriter(span, textToType, item.speed)
-
-    // Add line breaks between sentences except for the last one
-    if (i < aboutTypingTexts.length - 1) {
-      aboutElement.appendChild(document.createElement('br'))
-      aboutElement.appendChild(document.createElement('br'))
-      // Small delay between sentences
-      await new Promise(resolve => setTimeout(resolve, 300))
+      const textToType = currentLang === 'cn' ? item.textCn : item.text
+      await typeWriter(item.element, textToType, item.speed)
+      // Small delay between each text for better visual flow
+      if (isTypingActive) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+      }
     }
+  } catch (error) {
+    // Animation was stopped, this is expected
+  } finally {
+    isTypingActive = false
   }
 }
+
+
 
 // Start typing animation when page loads
 window.addEventListener('load', () => {
+  // Ensure clean start
+  stopAllAnimations()
   setTimeout(startTypingAnimation, 1000)
   // Also check scroll animations on load
   setTimeout(handleScrollAnimation, 100)
@@ -332,30 +337,38 @@ window.addEventListener('load', () => {
 
 // Restart typing animation when language changes
 document.getElementById('translate').addEventListener('click', () => {
+  // Immediately stop all animations
+  stopAllAnimations()
+
   setTimeout(() => {
     // Reset all text elements
     typingTexts.forEach(item => {
       if (item.element) {
         item.element.style.opacity = '0'
         item.element.innerHTML = ''
+        item.element.classList.remove('typing-text')
       }
     })
 
-    // Reset about description
-    const aboutDesc = document.querySelector('.about__description')
-    if (aboutDesc) {
-      aboutDesc.style.opacity = '0'
-      aboutDesc.innerHTML = ''
-    }
+    // Reset about cards
+    const aboutCards = document.querySelectorAll('.about__card')
+    aboutCards.forEach(card => {
+      card.classList.remove('active')
+    })
 
     // Restart typing animation
     setTimeout(startTypingAnimation, 500)
 
-    // Restart about typing if about section is visible
+    // Re-trigger about card animations if section is visible
     setTimeout(() => {
       const aboutSection = document.querySelector('.about.section')
-      if (aboutSection && elementInView(aboutSection, 1.1)) {
-        setTimeout(startAboutTypingAnimation, 1000)
+      if (aboutSection && elementInView(aboutSection, 1.2)) {
+        const aboutCards = document.querySelectorAll('.about__card')
+        aboutCards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('active')
+          }, index * 200)
+        })
       }
     }, 600)
   }, 100)
@@ -368,6 +381,21 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(handleScrollAnimation, 300)
   setTimeout(handleScrollAnimation, 600)
   setTimeout(handleScrollAnimation, 1000)
+
+  // Manual check for about section after everything loads
+  setTimeout(() => {
+    const aboutSection = document.querySelector('.about.section')
+    if (aboutSection && elementInView(aboutSection, 1.5)) {
+      const aboutCards = document.querySelectorAll('.about__card')
+      aboutCards.forEach((card, index) => {
+        if (!card.classList.contains('active')) {
+          setTimeout(() => {
+            card.classList.add('active')
+          }, index * 200)
+        }
+      })
+    }
+  }, 2000)
 })
 
 // Add resize listener to recheck animations

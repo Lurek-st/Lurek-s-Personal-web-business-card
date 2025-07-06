@@ -19,6 +19,7 @@ $(document).ready(function () {
                     "qualification1__title", "qualification1__subtitle", "qualification1__date",
                     "qualification2__title", "qualification2__subtitle", "qualification2__date",
                     "qualification3__title", "qualification3__subtitle", "qualification3__date",
+                    "qualification9__title", "qualification9__subtitle", "qualification9__date",
                     "cert1__title", "cert1__subtitle", "cert1__date",
                     "cert2__title", "cert2__subtitle", "cert2__date",
                     "cert3__title", "cert3__subtitle", "cert3__date"
@@ -52,6 +53,7 @@ $(document).ready(function () {
                         "qualification1__title", "qualification1__subtitle", "qualification1__date",
                         "qualification2__title", "qualification2__subtitle", "qualification2__date",
                         "qualification3__title", "qualification3__subtitle", "qualification3__date",
+                        "qualification9__title", "qualification9__subtitle", "qualification9__date",
                         "cert1__title", "cert1__subtitle", "cert1__date",
                         "cert2__title", "cert2__subtitle", "cert2__date",
                         "cert3__title", "cert3__subtitle", "cert3__date"
@@ -129,6 +131,19 @@ var translations = {
     qualification8__date: {
         cn: "2025.04 - now",
         en: "Apr 2025 - Present"
+    },
+
+    qualification9__title: {
+        cn: "MBA",
+        en: "MBA"
+    },
+    qualification9__subtitle: {
+        cn: "沃顿商学院远程课程",
+        en: "Wharton School Remote Program"
+    },
+    qualification9__date: {
+        cn: "2025.5",
+        en: "May 2025"
     },
 
     // Skills translations
