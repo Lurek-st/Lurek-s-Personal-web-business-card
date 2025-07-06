@@ -170,6 +170,15 @@ const handleScrollAnimation = () => {
   scrollElements.forEach((el) => {
     if (elementInView(el, 1.1)) {  // 更容易触发
       displayScrollElement(el)
+
+      // Check if this is the about section and start typing animation
+      if (el.classList.contains('about') && el.classList.contains('section')) {
+        // Only start once by checking if content is empty
+        const aboutDesc = document.querySelector('.about__description')
+        if (aboutDesc && aboutDesc.innerHTML.trim() === '') {
+          setTimeout(startAboutTypingAnimation, 800)
+        }
+      }
     }
   })
 }
@@ -199,19 +208,41 @@ const typingTexts = [
     element: document.querySelector('.home__title'),
     text: 'Hi, I\'m Lurek',
     textCn: '你好，我是 Lurek',
-    delay: 500
+    delay: 500,
+    speed: 80
   },
   {
     element: document.querySelector('.home__subtitle'),
     text: 'CityU-DG UG Student',
     textCn: 'CityU-DG UG Student',
-    delay: 0
+    delay: 0,
+    speed: 60
   },
   {
     element: document.querySelector('.home__description'),
     text: 'High level experience in web design and development knowledge, producing quality work.',
-    textCn: '拥有丰富的网页设计和开发知识经验，能够产出高质量的作品。',
-    delay: 0
+    textCn: 'AI工具专家，Web3开发数字游民，港城大创新创业者',
+    delay: 0,
+    speed: 50
+  }
+]
+
+// About section typing texts  
+const aboutTypingTexts = [
+  {
+    text: 'As a Digital Nomad, I specialize in providing remote support to North American B2B clients using AI tools.',
+    textCn: '作为一名数字游民，我专注于使用AI工具为北美B端客户提供各类远程支持。',
+    speed: 50
+  },
+  {
+    text: 'I am also a Web2&3 Developer with extensive experience in web design and development.',
+    textCn: '同时，我也是一名Web2&3开发者，拥有丰富的网页设计和开发经验。',
+    speed: 50
+  },
+  {
+    text: 'As an Innovation Community Leader, I am dedicated to fostering an innovative and entrepreneurial atmosphere on campus.',
+    textCn: '作为创新创业社群领袖，致力于构建校内创新创业氛围。',
+    speed: 50
   }
 ]
 
@@ -253,9 +284,41 @@ async function startTypingAnimation() {
 
   for (const item of typingTexts) {
     const textToType = currentLang === 'cn' ? item.textCn : item.text
-    await typeWriter(item.element, textToType, 80)
+    await typeWriter(item.element, textToType, item.speed)
     // Small delay between each text for better visual flow
     await new Promise(resolve => setTimeout(resolve, 200))
+  }
+}
+
+async function startAboutTypingAnimation() {
+  const currentLang = getCurrentLanguage()
+  const aboutElement = document.querySelector('.about__description')
+
+  if (!aboutElement) return
+
+  // Clear existing content and prepare for typing
+  aboutElement.style.opacity = '1'
+  aboutElement.classList.add('active')
+  aboutElement.innerHTML = ''
+
+  for (let i = 0; i < aboutTypingTexts.length; i++) {
+    const item = aboutTypingTexts[i]
+    const textToType = currentLang === 'cn' ? item.textCn : item.text
+
+    // Create a span for each sentence with highlight styling
+    const span = document.createElement('span')
+    span.className = 'highlight'
+    aboutElement.appendChild(span)
+
+    await typeWriter(span, textToType, item.speed)
+
+    // Add line breaks between sentences except for the last one
+    if (i < aboutTypingTexts.length - 1) {
+      aboutElement.appendChild(document.createElement('br'))
+      aboutElement.appendChild(document.createElement('br'))
+      // Small delay between sentences
+      await new Promise(resolve => setTimeout(resolve, 300))
+    }
   }
 }
 
@@ -278,8 +341,23 @@ document.getElementById('translate').addEventListener('click', () => {
       }
     })
 
+    // Reset about description
+    const aboutDesc = document.querySelector('.about__description')
+    if (aboutDesc) {
+      aboutDesc.style.opacity = '0'
+      aboutDesc.innerHTML = ''
+    }
+
     // Restart typing animation
     setTimeout(startTypingAnimation, 500)
+
+    // Restart about typing if about section is visible
+    setTimeout(() => {
+      const aboutSection = document.querySelector('.about.section')
+      if (aboutSection && elementInView(aboutSection, 1.1)) {
+        setTimeout(startAboutTypingAnimation, 1000)
+      }
+    }, 600)
   }, 100)
 })
 

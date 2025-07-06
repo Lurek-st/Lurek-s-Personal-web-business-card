@@ -15,7 +15,7 @@
   --first-color-second: hsl(var(--hue-color), 69%, 61%);
   --first-color-alt: hsl(var(--hue-color), 57%, 53%);
   --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
-  --first-color-rgb: 230, 119, 23;
+  --first-color-rgb: 209, 197, 241;
   --title-color: hsl(var(--hue-color), 8%, 15%);
   --text-color: hsl(var(--hue-color), 8%, 45%);
   --text-color-light: hsl(var(--hue-color), 8%, 65%);
@@ -78,7 +78,7 @@
 body.dark-theme {
   /* HSL color mode */
   --first-color-second: hsl(var(--hue-color), 30%, 8%);
-  --first-color-rgb: 230, 119, 23;
+  --first-color-rgb: 209, 197, 241;
   --title-color: hsl(var(--hue-color), 8%, 95%);
   --text-color: hsl(var(--hue-color), 8%, 45%);
   --text-color-light: hsl(var(--hue-color), 8%, 75%);
@@ -257,10 +257,30 @@ img {
   font-weight: var(--font-medium);
   cursor: pointer;
   text-transform: capitalize;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav__link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--first-color);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav__link:hover::before {
+  width: 100%;
 }
 
 .nav__link:hover {
   color: var(--first-color);
+  transform: translateY(-2px);
 }
 
 .nav__link:hover svg {
@@ -456,6 +476,11 @@ img {
   text-align: center;
   margin-bottom: var(--mb-2-5);
   color: var(--text-color-light);
+  opacity: 0;
+}
+
+.about__description.active {
+  opacity: 1;
 }
 
 .about__description .highlight {
@@ -890,8 +915,30 @@ img {
   row-gap: 1.5rem;
 }
 
+.footer__link {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.footer__link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--first-color);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.footer__link:hover::before {
+  width: 100%;
+}
+
 .footer__link:hover {
   color: var(--first-color-lighter);
+  transform: translateY(-2px);
 }
 
 .footer__social {
@@ -1129,7 +1176,7 @@ img {
 }
 
 .portfolio__content:hover {
-  transform: translateY(-10px) scale(1.02);
+  transform: translateY(-10px);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
@@ -1138,7 +1185,7 @@ img {
 }
 
 .portfolio__content:hover .portfolio__img {
-  transform: scale(1.1);
+  transform: scale(1.0);
 }
 
 .portfolio_ {
@@ -1155,7 +1202,8 @@ img {
 
 .contact__information:hover {
   transform: translateX(10px);
-  background: rgba(var(--first-color-rgb), 0.05);
+  background: #d1c5f1;
+  color: white;
 }
 
 /* Button Glow Effect */
