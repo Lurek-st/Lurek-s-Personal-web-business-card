@@ -755,7 +755,7 @@ img {
 }
 
 .skills__genai {
-  width: 90%;
+  width: 95%;
 }
 
 .skills__aiimg {
@@ -829,6 +829,32 @@ img {
 
 .skills__decision {
   width: 80%;
+}
+
+/* Tool Development skills */
+.skills__web3bot {
+  width: 75%;
+}
+
+.skills__vscode {
+  width: 80%;
+}
+
+/* Language skills */
+.skills__mandarin {
+  width: 100%;
+}
+
+.skills__english {
+  width: 85%;
+}
+
+.skills__cantonese {
+  width: 70%;
+}
+
+.skills__spanish {
+  width: 60%;
 }
 
 /*==================== QUALIFICATION ====================*/
